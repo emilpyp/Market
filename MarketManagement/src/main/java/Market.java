@@ -92,6 +92,9 @@ public class Market implements IMarketable{
             SaleItem renewedSaleItem = new SaleItem(soldProduct, soldProduct.getQuantity() - count);
             itemsInSale.put(productId, renewedSaleItem);
         }
+        else{
+            itemsInSale.remove(productId);
+        }
 
         Sale newSale = new Sale(itemsInSale);
 

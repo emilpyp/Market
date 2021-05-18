@@ -1,6 +1,5 @@
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
 public class MarketDriverProducts {
 
@@ -50,12 +49,6 @@ public class MarketDriverProducts {
             if(userInput.equals("b")) return;
             double productPrice = Double.parseDouble(userInput);
 
-            // Get the amount to initialize the stock.
-            System.out.println("Enter the amount of the product: ");
-            userInput = Utilities.promptForDouble();
-            if(userInput.equals("b")) return;
-            double productAmount = Double.parseDouble(userInput);
-
             // Get the unit of the product.
             System.out.println("Choose measurement unit of product.");
             System.out.println("Type [1] for [kg] or [2] for [item]: ");
@@ -64,9 +57,26 @@ public class MarketDriverProducts {
             Unit productUnit;
             productUnit = (userInput.equals("1")) ? Unit.KG : Unit.ITEM;
 
+            boolean validUnit = false;
+            double productAmount = 0;
+            while(!validUnit){
+                // Get the amount to initialize the stock.
+                System.out.println("Enter the amount of the product: ");
+                userInput = Utilities.promptForDouble();
+                if(userInput.equals("b")) break;
+                productAmount = Double.parseDouble(userInput);
+
+                if((productUnit.equals(Unit.ITEM)) && (productAmount % 1 != 0)){
+                    System.out.println("( [Item] units must be whole numbers )");
+                    continue;
+                }
+                validUnit = true;
+            }
             market.addNewProduct(productName, productCategory, productPrice,
                     productUnit, productAmount);
 
+            System.out.printf("[%.2f][%s] [%s] with price [%.2f] added successfully.\n\n",
+                    productAmount, productUnit, productName, productPrice);
             System.out.println("-".repeat(50) + "\n");
         }
 

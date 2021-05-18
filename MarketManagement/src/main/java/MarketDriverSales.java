@@ -13,10 +13,10 @@ public class MarketDriverSales {
 
     public static void printBasketContents(Map<Long, SaleItem> basket, IMarketable market){
 
-        System.out.println("Contents of your basket: \n" + "-".repeat(70));
+        System.out.println("Contents of your basket: \n" + "-".repeat(72));
         System.out.printf("|%-10s|%-20s|%-10s|%-5s|%-10s|%-10s|\n",
                 "ID", "Name", "Count", "Unit", "Unit price", "Total");
-        System.out.println("-".repeat(70));
+        System.out.println("-".repeat(72));
 
         for(Long productId: basket.keySet()){
 
@@ -77,7 +77,15 @@ public class MarketDriverSales {
             }
             if(starOver) continue;
 
-            SaleItem newSaleItem = new SaleItem(productId, product.getName(), amount, product.getPrice());
+            SaleItem newSaleItem;
+            if(basket.containsKey(productId)){
+                SaleItem inBasket = basket.get(productId);
+                newSaleItem = new SaleItem(productId, product.getName(), amount + inBasket.getQuantity(), product.getPrice());
+            }
+            else {
+                newSaleItem = new SaleItem(productId, product.getName(), amount, product.getPrice());
+            }
+
             basket.put(productId, newSaleItem);
             System.out.printf("[%f][%s] added to basket.\n\n", amount, product.getName());
 
@@ -152,7 +160,7 @@ public class MarketDriverSales {
                     case "3":{
                         double transactionCost = market.newSale(basket);
                         printBasketContents(basket, market);
-                        System.out.println("-".repeat(70));
+                        System.out.println("-".repeat(72));
                         System.out.printf("|%60s%10.2f|\n\n", "Total Cost: ", transactionCost);
                     }
                     case "b":{
@@ -168,6 +176,7 @@ public class MarketDriverSales {
 
     public static void returnProduct(IMarketable market){
         while(true) {
+            listAllSales(market);
             System.out.println("Enter ID of the sale or [B] to go back.");
             String saleIdStr = Utilities.promptForId();
             if (saleIdStr.equals("b")) return;
@@ -248,7 +257,7 @@ public class MarketDriverSales {
     }
 
     public static void listAllSales(IMarketable market){
-        System.out.println(" ".repeat(14) + "List of all sales");
+        System.out.println(" ".repeat(28) + "List of all sales");
         printSalesHeader();
         for(Sale s: market.getSales().values()){
             System.out.println(s);
